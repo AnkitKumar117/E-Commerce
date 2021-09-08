@@ -14,6 +14,7 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: true,
+    useUnifiedTopology: true,
   })
   .then(() => console.log("DB Connected"))
   .catch((e) => console.log(`DB Connection failed ${e}`));

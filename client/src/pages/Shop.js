@@ -12,7 +12,6 @@ import {
   DollarOutlined,
   DownSquareOutlined,
   StarOutlined,
-  SlidersFilled,
 } from "@ant-design/icons";
 import Star from "../components/forms/Star";
 
@@ -76,6 +75,9 @@ const Shop = () => {
   useEffect(() => {
     const delayed = setTimeout(() => {
       fetchProducts({ query: text });
+      if (!text) {
+        loadAllProducts();
+      }
     }, 300);
     return () => clearTimeout(delayed);
   }, [text]);
@@ -322,14 +324,14 @@ const Shop = () => {
               key="1"
               title={
                 <span className="h6">
-                  <SlidersFilled /> Price
+                  <DollarOutlined /> Price
                 </span>
               }
             >
               <div>
                 <Slider
                   className="ml-4 mr-4"
-                  tipFormatter={(v) => `Rs${v}`}
+                  tipFormatter={(v) => `$${v}`}
                   range
                   value={price}
                   onChange={handleSlider}
