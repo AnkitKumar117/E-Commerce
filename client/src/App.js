@@ -1,44 +1,80 @@
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import Home from "./pages/Home";
-import Header from "./components/nav/Header";
-import RegisterComplete from "./pages/auth/RegisterComplete";
-
 import { auth } from "./firebase";
 import { useDispatch } from "react-redux";
-import ForgotPassword from "./pages/auth/ForgotPassword";
 import { currentUser } from "./functions/auth";
-import History from "./pages/users/History";
-import UserRoute from "./components/routes/UserRoute";
-import Wishlist from "./pages/users/Wishlist";
-import Password from "./pages/users/Password";
-import AdminRoute from "./components/routes/AdminRoute";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import CategoryCreate from "./pages/admin/category/CategoryCreate";
-import CategoryUpdate from "./pages/admin/category/CategoryUpdate";
-import SubCreate from "./pages/admin/sub/SubCreate";
-import SubUpdate from "./pages/admin/sub/SubUpdate";
-import ProductCreate from "./pages/admin/product/ProductCreate";
-import AllProducts from "./pages/admin/product/AllProducts";
-import ProductUpdate from "./pages/admin/product/ProductUpdate";
-import Product from "./pages/Product";
-import CategoryHome from "./pages/category/CategoryHome";
-import SubHome from "./pages/sub/SubHome";
-import Shop from "./pages/Shop";
-import Cart from "./pages/Cart";
-import SideDrawer from "./components/drawer/Sidedrawer";
-import Checkout from "./pages/Checkout";
-import CreateCouponPage from "./pages/admin/coupon/CreateCouponPage";
-import Payment from "./pages/Payment";
+import { LoadingOutlined } from "@ant-design/icons";
+// import Login from "./pages/auth/Login";
+// import Register from "./pages/auth/Register";
+// import Home from "./pages/Home";
+// import Header from "./components/nav/Header";
+// import RegisterComplete from "./pages/auth/RegisterComplete";
+// import ForgotPassword from "./pages/auth/ForgotPassword";
+// import History from "./pages/users/History";
+// import UserRoute from "./components/routes/UserRoute";
+// import Wishlist from "./pages/users/Wishlist";
+// import Password from "./pages/users/Password";
+// import AdminRoute from "./components/routes/AdminRoute";
+// import AdminDashboard from "./pages/admin/AdminDashboard";
+// import CategoryCreate from "./pages/admin/category/CategoryCreate";
+// import CategoryUpdate from "./pages/admin/category/CategoryUpdate";
+// import SubCreate from "./pages/admin/sub/SubCreate";
+// import SubUpdate from "./pages/admin/sub/SubUpdate";
+// import ProductCreate from "./pages/admin/product/ProductCreate";
+// import AllProducts from "./pages/admin/product/AllProducts";
+// import ProductUpdate from "./pages/admin/product/ProductUpdate";
+// import Product from "./pages/Product";
+// import CategoryHome from "./pages/category/CategoryHome";
+// import SubHome from "./pages/sub/SubHome";
+// import Shop from "./pages/Shop";
+// import Cart from "./pages/Cart";
+// import SideDrawer from "./components/drawer/Sidedrawer";
+// import Checkout from "./pages/Checkout";
+// import CreateCouponPage from "./pages/admin/coupon/CreateCouponPage";
+// import Payment from "./pages/Payment";
+
+//React.Lazy
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const Home = lazy(() => import("./pages/Home"));
+const Header = lazy(() => import("./components/nav/Header"));
+const RegisterComplete = lazy(() => import("./pages/auth/RegisterComplete"));
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
+const History = lazy(() => import("./pages/users/History"));
+const UserRoute = lazy(() => import("./components/routes/UserRoute"));
+const Wishlist = lazy(() => import("./pages/users/Wishlist"));
+const Password = lazy(() => import("./pages/users/Password"));
+const AdminRoute = lazy(() => import("./components/routes/AdminRoute"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const CategoryCreate = lazy(() =>
+  import("./pages/admin/category/CategoryCreate")
+);
+const CategoryUpdate = lazy(() =>
+  import("./pages/admin/category/CategoryUpdate")
+);
+const SubCreate = lazy(() => import("./pages/admin/sub/SubCreate"));
+const SubUpdate = lazy(() => import("./pages/admin/sub/SubUpdate"));
+const ProductCreate = lazy(() => import("./pages/admin/product/ProductCreate"));
+const AllProducts = lazy(() => import("./pages/admin/product/AllProducts"));
+const ProductUpdate = lazy(() => import("./pages/admin/product/ProductUpdate"));
+const Product = lazy(() => import("./pages/Product"));
+const CategoryHome = lazy(() => import("./pages/category/CategoryHome"));
+const SubHome = lazy(() => import("./pages/sub/SubHome"));
+const Shop = lazy(() => import("./pages/Shop"));
+const Cart = lazy(() => import("./pages/Cart"));
+const SideDrawer = lazy(() => import("./components/drawer/Sidedrawer"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const CreateCouponPage = lazy(() =>
+  import("./pages/admin/coupon/CreateCouponPage")
+);
+const Payment = lazy(() => import("./pages/Payment"));
 
 const App = () => {
   const dispatch = useDispatch();
-  useEffect(() => { 
+  useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const idTokenResult = await user.getIdTokenResult();
@@ -65,9 +101,17 @@ const App = () => {
     return () => unsubscribe();
   }, [dispatch]);
   return (
-    <>
+    <Suspense
+      fallback={
+        <div className="col text-center p-5">
+          EC
+          <LoadingOutlined />
+          MMERCE
+        </div>
+      }
+    >
       <Header />
-      <SideDrawer/>
+      <SideDrawer />
       <ToastContainer />
       <Switch>
         <Route exact path="/" component={Home} />
@@ -96,14 +140,14 @@ const App = () => {
         />
         <Route exact path="/product/:slug" component={Product} />
         <Route exact path="/category/:slug" component={CategoryHome} />
-        <Route exact path="/sub/:slug" component={ SubHome } />
-        <Route exact path="/shop" component={ Shop } />
-        <Route exact path="/cart" component={ Cart } />
-        <UserRoute exact path="/checkout" component={Checkout}/>
+        <Route exact path="/sub/:slug" component={SubHome} />
+        <Route exact path="/shop" component={Shop} />
+        <Route exact path="/cart" component={Cart} />
+        <UserRoute exact path="/checkout" component={Checkout} />
         <AdminRoute exact path="/admin/coupon" component={CreateCouponPage} />
-        <UserRoute exact path="/payment" component={Payment}/>
+        <UserRoute exact path="/payment" component={Payment} />
       </Switch>
-    </>
+    </Suspense>
   );
 };
 
